@@ -2,7 +2,7 @@ import os
 import time #取現在時間使用
 import requests #做http Request
 from bs4 import BeautifulSoup   #整理html
-
+requests.packages.urllib3.disable_warnings() #disable warnings
 print("") #保持美觀，空一行
 try:
     your_ip = requests.get("http://api.ipify.org/").text
@@ -39,9 +39,9 @@ else:
     mm = time_now[1]
     dd = time_now[2]
 
-url = "http://network.ntust.edu.tw/flowstatistical.aspx"    #台科的取流量網址
+url = "https://network.ntust.edu.tw/flowstatistical.aspx"    #台科的取流量網址
 s = requests.session()  #紀錄session
-res1 = s.get(url)   #第一次get學校網址，存session跟post雜項
+res1 = s.get(url,verify = False)   #第一次get學校網址，存session跟post雜項
 bs1 = BeautifulSoup(res1.text,"html.parser")    #BS整理get的值
 
 #Post Const
@@ -67,9 +67,8 @@ postdata['ctl00$ContentPlaceHolder1$dlday'] = dd
 print("查詢中請稍後......\n")
 
 #Post data to server
-res2 = s.post(url,data = postdata)
+res2 = s.post(url,data = postdata,verify = False)
 bs2 = BeautifulSoup(res2.text,'html.parser')
-
 #整理Table內容
 table = bs2.find("table", {"class" : "CSSTableGenerator"})
 cells = []
@@ -78,6 +77,7 @@ for row in table.findAll("tr"):
 
 #懶得用正規表達，直接把不必要的替換成空白(等於刪除)
 total = str(cells[3])
+
 total = total.replace(",","")
 total = total.replace("<td>","")
 total = total.replace("(bytes)","")
@@ -103,7 +103,7 @@ for s in range(0,4):
     print(str(fiveG_size[s]-total_size[s])+ " " + size[s])
 
 #檢查停權
-banurl = "http://network.ntust.edu.tw/Iprecover.aspx"
+banurl = "https://network.ntust.edu.tw/Iprecover.aspx"
 sb = requests.session()
 sban1 = requests.get(banurl)
 bsban1 = BeautifulSoup(sban1.text,"html.parser")
