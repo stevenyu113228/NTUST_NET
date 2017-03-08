@@ -2,7 +2,9 @@ import os
 import time #取現在時間使用
 import requests #做http Request
 from bs4 import BeautifulSoup   #整理html
+from multiprocessing import Queue #包成EXE要多import這個
 requests.packages.urllib3.disable_warnings() #disable warnings
+
 print("") #保持美觀，空一行
 try:
     your_ip = requests.get("http://api.ipify.org/").text
@@ -121,6 +123,6 @@ bantable  = str((bantable[3].select("span"))[0])
 bantable = bantable[(bantable.find('>'))+1:]
 bantable = bantable[:bantable.find('<')]
 print ("\n",bantable)
-print("\n感謝您使用台科大流量查詢軟體V1.0\n作者:游照臨\n")
+print("\n感謝您使用台科大流量查詢軟體V1.1\n作者:游照臨\n")
 
 os.system("pause")
